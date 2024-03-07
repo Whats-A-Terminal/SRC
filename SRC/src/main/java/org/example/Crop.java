@@ -9,7 +9,7 @@ public class Crop extends Farm{
 
     public Crop(int cropID, String cropName, int quantityAvailable,
                 Object[] harvestDate, boolean inSeason){
-        super();
+        super("unknown", "unknown");
         this.cropID = cropID;
         this.cropName = cropName;
         this.quantityAvailable = quantityAvailable;
@@ -25,6 +25,41 @@ public class Crop extends Farm{
         this.cropName = cropName;
         this.quantityAvailable = quantityAvailable;
         this.harvestDate = harvestDate;
+        this.inSeason = inSeason;
+    }
+
+    // Getters
+    public int getCropID() {
+        return cropID;
+    }
+
+    public String getCropName() {
+        return cropName;
+    }
+
+    public int getQuantityAvailable() {
+        return quantityAvailable;
+    }
+
+    public Object[] getHarvestDate() {
+        return harvestDate;
+    }
+
+    public boolean isInSeason() {
+        return inSeason;
+    }
+
+    // Setters
+    // Note: No setter for cropID and cropName because they are final
+    public void setQuantityAvailable(int quantityAvailable) {
+        this.quantityAvailable = quantityAvailable;
+    }
+
+    public void setHarvestDate(Object[] harvestDate) {
+        this.harvestDate = harvestDate;
+    }
+
+    public void setInSeason(boolean inSeason) {
         this.inSeason = inSeason;
     }
 }

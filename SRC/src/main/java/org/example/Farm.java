@@ -14,17 +14,22 @@ public class Farm {
         this.farmLocation = farmLocation;
     }
 
+    // Getters
     public String getFarmName(){
         return this.farmName;
     }
+
+    public String getFarmLocation(){
+        return this.farmLocation;
+    }
+
+    // Setters
     public void setFarmName(String farmName){
         this.farmName = farmName;
     }
 
-    public String getFarmLocation(){
-        return this.farmName;
-    }
     public void setFarmLocation(String farmLocation){
         this.farmLocation = farmLocation;
     }
+
 }
