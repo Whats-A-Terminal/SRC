@@ -1,2 +1,1 @@
-rootProject.name = "SRC"
-
+rootProject.name = "Crop Management"
