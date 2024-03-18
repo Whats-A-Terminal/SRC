@@ -5,6 +5,12 @@ import java.util.Scanner;
 
 public class Main {
 
+    /**
+     * The main menu that the farm managers will use to interact with the database.
+     * This menu contains the basic operations that they can do.
+     * There is no parameters or return function as this is the only thing
+     * the users can see and interact with (before going to a submenu).
+     * */
     public static void mainMenu(){
 
         Scanner input = new Scanner(System.in);
@@ -54,6 +60,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        // Once connection to the server has been established, show menu.
         mainMenu();
     }
 }
