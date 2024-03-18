@@ -29,10 +29,10 @@ public class Main {
             Spreadsheet spreadsheet = sheetsService.spreadsheets().get(SPREADSHEET_ID).execute();
 
             // Print the title of the spreadsheet
-            System.out.println("Successfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
+            System.out.println("\nSuccessfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
 
             // Iterate through each sheet in the spreadsheet and print its title
-            System.out.println("Available sheets:");
+            System.out.println("\nAvailable sheets:\n------------------------------------");
             spreadsheet.getSheets().forEach(sheet -> System.out.println("- " + sheet.getProperties().getTitle()));
         } catch (Exception e) {
             System.err.println("Failed to connect to the spreadsheet. Please check your setup:");
