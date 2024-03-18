@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "primal-duality-409319",
+  "private_key_id": "0877620bf69ea25e8ad2ac4ae1ad243f9296b3da",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3CK6jEjWtNGQp\nBvn86G8+ShP4bba1VCXSwV9MzRyFGD5sQ61F39hyn5s/MscEZ9Tsk7v7VY1VaTUr\nCUMceHWAugZmkHEoj+5CTJgSKzpy+XD63pkZnEBKaG/GvxuhnRLQ/gnZKSyo7zpM\nP4AHSFbd90kdOrN3LwbQ2cpw1s0YJPP3YMxHh48wX8Zgf/HzxE0mk+CsTRlFL6g2\nUWlr9gCA6wo/EUIDuCAP9pVWFjwe55OFZYTtsNEdI6sT7cfrzAM8Bshv0xR+4WOw\nREbTjnqZgo1U+j2zN+ZoDd44U1d5S1e3DtL1pd3/IoWktYQrs5hJKBLfLCJw1bfT\njxbMu0BVAgMBAAECggEAF/PmasfIx3xqOSZFE9BVMokeOO4esXcsJfsRXisfdtl3\n3dIzfEfxevqhJfGesthluHoS6S7Geq10fEfPhQvMkMaHbOetL1o6m2mLoyEOGprD\nKslzrrLQhQxKyG8dDhbQrhH4tvcY9Zis/+p1dj6Ew7KHWnBiqQ+57B38TK0HlQeU\nHNhbci1ylg9IvjDs64yII+65jP+Zi5Bo4Wmi2xruMmyilTrunFtViq7y6gnaPmCV\nennjjFvO3IsfnkdsJkPpZW/UuvcDBRCKAePdNCej77EmX+quEqV1TyV42NJkfFE2\nEmR9SK9MvbLYLQzfinQ0Ptf/0nByMRMMCRBsMqUDFwKBgQDrZEAS7mRFVpqorCDP\nLN+xgSt56Y0dau2/zhyc5txP+D15tLa5AgVx3UxXhz9hEhfZatAQDArRjElZMWy/\n8rv89c9tStLGA/5yqNWblp7oooZZE4CV18wqvLtplahZw6tDXdqaDeQM7CFZ36sO\nm4n6/e9F04TMSdQnEdJvDcz13wKBgQDHDvUTeepMgcs9sEMp/Hkw0U4HwnY9kz99\n4ZoGF2lgnhWxUZSU0Xav3nJBt/O55Vddeweoe6TMOt+J4mnLu2SJgoyZjMs8SOcO\n/BBMaDyIelF3P/dZpJoqH1JlZ1X8oO8feqIPtV6V/Pk0fR5C5kyqh8sKjR2fzd6v\nAWQlJ4fISwKBgAadsLdXf/X68ynefKWWC0t/5+rrR44WHUyQzHkUfAi7X272R1R3\n3BNRNv4WzQ87ZPQ1blelHwC4wq8BFp9mgSYg+o2F1tq97f7nA+n1l83OE5yZUbnk\ncNaaq2HSVQMA3uVr0+MUlN5QHLfb84Dbmks1q+34ffkH8jCO7a01ZBddAoGBAL1f\nUXAx7+DRKhWJ9pufAXyb4uwm6G40A5cyZWGeLDYqruB+iCf8DjnKGlDDPC+CK9dX\nEDYNSv6wk7GNoLCdmkvn0vLRqxezE36B9s956vy7wXz9ccfqfG/OVIj8AiXQxSzh\ncgQXu+BdRofU8FEc35rsjRGApso9BLjhTfC65sZ5AoGBANxVjj00dpU7RrtYclq4\n7A9K2kzVd+P002hTXRDNgyMbhZtqJ9f68IxEIiLRJZOi41JYqxCfXOUVyCFEfHsl\nnMpE0XzZNXD7BmcKN/Rg2P0FzYFY2R0JcYdsxrNO6X2X16aU6iemF4NbIjxqhMvR\nRQjBRVi0sBgqf4lIjSJqiN61\n-----END PRIVATE KEY-----\n",
+  "client_email": "test-java-api@primal-duality-409319.iam.gserviceaccount.com",
+  "client_id": "108967560374513823157",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test-java-api%40primal-duality-409319.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

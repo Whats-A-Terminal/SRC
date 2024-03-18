@@ -1,9 +1,44 @@
 package org.example;
 
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.*;
+import org.example.auth.SheetsServiceInitializer;
 
 import java.util.Scanner;
 
 public class Main {
+    private static Sheets sheetsService;
+    private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc";
+
+
+    public static void initializeSheetsService() {
+        try {
+            sheetsService = SheetsServiceInitializer.getSheetsService();
+            System.out.println("Successfully initialized Google Sheets service.");
+        } catch (Exception e) {
+            System.err.println("Failed to initialize Google Sheets service.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+
+    public static void testConnection() {
+        try {
+            // Use the Sheets service to load the spreadsheet by its ID
+            Spreadsheet spreadsheet = sheetsService.spreadsheets().get(SPREADSHEET_ID).execute();
+
+            // Print the title of the spreadsheet
+            System.out.println("Successfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
+
+            // Iterate through each sheet in the spreadsheet and print its title
+            System.out.println("Available sheets:");
+            spreadsheet.getSheets().forEach(sheet -> System.out.println("- " + sheet.getProperties().getTitle()));
+        } catch (Exception e) {
+            System.err.println("Failed to connect to the spreadsheet. Please check your setup:");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * The main menu that the farm managers will use to interact with the database.
@@ -60,6 +95,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        // Create connection to the server (Google Sheets Service)
+        initializeSheetsService();
+
+        // Ensure that we have access to the Google Spreadsheet
+        testConnection();
 
         // Once connection to the server has been established, show menu.
         mainMenu();
