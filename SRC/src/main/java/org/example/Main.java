@@ -8,48 +8,7 @@ import org.example.services.GoogleSheetsService;
 import java.util.Scanner;
 
 public class Main {
-    private static Sheets sheetsServiceInitializer; // Object to check whether the Google Sheets Service is working.
     private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc"; // The Google Sheets database ID. PLEASE HIDE THIS BEFORE PRODUCTION!
-
-
-    /**
-     * This function creates and initializes the Google Sheets Service through the SheetsServiceInitializer file.
-     * However, the goal is to have all the different modifications be put on a stack that'll be executed once the
-     * user says so (via the mainMenu) to limit API calls and save money.
-     * */
-    public static void initializeSheetsService() {
-        try {
-            sheetsServiceInitializer = SheetsServiceInitializer.getSheetsService();
-            System.out.println("Successfully initialized Google Sheets service.");
-        } catch (Exception e) {
-            System.err.println("Failed to initialize Google Sheets service.");
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-
-    /**
-     * This is a helper function for the main to make sure that sheetsService was initialized successfully.
-     * Once the service has been confirmed as operable, it'll display the available spreadsheets & sheets that are
-     * available for the user to edit.
-     * */
-    public static void testConnection() {
-        try {
-            // Use the Sheets service to load the spreadsheet by its ID
-            Spreadsheet spreadsheet = sheetsServiceInitializer.spreadsheets().get(SPREADSHEET_ID).execute();
-
-            // Print the title of the spreadsheet
-            System.out.println("\nSuccessfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
-
-            // Iterate through each sheet in the spreadsheet and print its title
-            System.out.println("\nAvailable sheets:\n------------------------------------");
-            spreadsheet.getSheets().forEach(sheet -> System.out.println("- " + sheet.getProperties().getTitle()));
-        } catch (Exception e) {
-            System.err.println("Failed to connect to the spreadsheet. Please check your setup:");
-            e.printStackTrace();
-        }
-    }
 
 
     /**
@@ -115,13 +74,19 @@ public class Main {
      * Since this is the main, there is no params or returns.
      * */
     public static void main(String[] args) {
-        // Create connection to the server (Google Sheets Service)
-        initializeSheetsService();
+        try {
+            GoogleSheetsService googleSheetsService = new GoogleSheetsService(SPREADSHEET_ID);
+            System.out.println("Successfully initialized Google Sheets service.");
 
-        // Ensure that we have access to the Google Spreadsheet
-        testConnection();
+            // Proceed with your existing logic, e.g., testConnection(), mainMenu(), etc.
+            // Note: You may need to adjust the testConnection() method or move its logic
+            // into GoogleSheetsService as appropriate.
+        } catch (Exception e) {
+            System.err.println("Failed to initialize Google Sheets service.");
+            e.printStackTrace();
+            System.exit(1);
+        }
 
-        GoogleSheetsService googleSheetsService = new GoogleSheetsService(sheetsServiceInitializer, SPREADSHEET_ID); // Object to control the different operations of the Google Sheets Database.
 
         // Once connection to the server has been established, show menu.
         mainMenu();

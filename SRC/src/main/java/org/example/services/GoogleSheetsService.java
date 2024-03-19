@@ -8,15 +8,18 @@ import java.util.List;
 
 import org.example.Farm;
 import org.example.Crop;
+import org.example.auth.SheetsServiceInitializer;
 
 public class GoogleSheetsService {
     private Sheets sheetsService;
     private String spreadsheetId;
 
-    public GoogleSheetsService(Sheets sheetsService, String spreadsheetId) {
-        this.sheetsService = sheetsService;
+    public GoogleSheetsService(String spreadsheetId) throws Exception {
+        SheetsServiceInitializer initializer = new SheetsServiceInitializer();
+        this.sheetsService = initializer.getSheetsService();
         this.spreadsheetId = spreadsheetId;
     }
+
 
     public List<Crop> getAllCrops(String range) {
         List<Crop> crops = new ArrayList<>();

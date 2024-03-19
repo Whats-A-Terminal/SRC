@@ -1,4 +1,5 @@
 package org.example.auth;
+
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -11,7 +12,7 @@ import java.io.InputStream;
 import java.util.Collections;
 
 public class SheetsServiceInitializer {
-    public static Sheets getSheetsService() throws Exception {
+    public Sheets getSheetsService() throws Exception {
         try {
             // Load the service account key file as a classpath resource
             InputStream serviceAccountStream = SheetsServiceInitializer.class.getClassLoader().getResourceAsStream("TEST-java-api-key.json");
