@@ -3,11 +3,12 @@ package org.example;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.*;
 import org.example.auth.SheetsServiceInitializer;
+import org.example.services.GoogleSheetsService;
 
 import java.util.Scanner;
 
 public class Main {
-    private static Sheets sheetsService; // Main object used to interact with the Google Sheets database.
+    private static Sheets sheetsServiceInitializer; // Object to check whether the Google Sheets Service is working.
     private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc"; // The Google Sheets database ID. PLEASE HIDE THIS BEFORE PRODUCTION!
 
 
@@ -18,7 +19,7 @@ public class Main {
      * */
     public static void initializeSheetsService() {
         try {
-            sheetsService = SheetsServiceInitializer.getSheetsService();
+            sheetsServiceInitializer = SheetsServiceInitializer.getSheetsService();
             System.out.println("Successfully initialized Google Sheets service.");
         } catch (Exception e) {
             System.err.println("Failed to initialize Google Sheets service.");
@@ -36,7 +37,7 @@ public class Main {
     public static void testConnection() {
         try {
             // Use the Sheets service to load the spreadsheet by its ID
-            Spreadsheet spreadsheet = sheetsService.spreadsheets().get(SPREADSHEET_ID).execute();
+            Spreadsheet spreadsheet = sheetsServiceInitializer.spreadsheets().get(SPREADSHEET_ID).execute();
 
             // Print the title of the spreadsheet
             System.out.println("\nSuccessfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
@@ -60,7 +61,6 @@ public class Main {
     public static void mainMenu(){
 
         Scanner input = new Scanner(System.in);
-        
         while (true){
             System.out.println("\nMain Menu: ");
             System.out.println("1: See all crops");
@@ -120,6 +120,8 @@ public class Main {
 
         // Ensure that we have access to the Google Spreadsheet
         testConnection();
+
+        GoogleSheetsService googleSheetsService = new GoogleSheetsService(sheetsServiceInitializer, SPREADSHEET_ID); // Object to control the different operations of the Google Sheets Database.
 
         // Once connection to the server has been established, show menu.
         mainMenu();
