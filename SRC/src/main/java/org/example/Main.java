@@ -7,10 +7,15 @@ import org.example.auth.SheetsServiceInitializer;
 import java.util.Scanner;
 
 public class Main {
-    private static Sheets sheetsService;
-    private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc";
+    private static Sheets sheetsService; // Main object used to interact with the Google Sheets database.
+    private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc"; // The Google Sheets database ID. PLEASE HIDE THIS BEFORE PRODUCTION!
 
 
+    /**
+     * This function creates and initializes the Google Sheets Service through the SheetsServiceInitializer file.
+     * However, the goal is to have all the different modifications be put on a stack that'll be executed once the
+     * user says so (via the mainMenu) to limit API calls and save money.
+     * */
     public static void initializeSheetsService() {
         try {
             sheetsService = SheetsServiceInitializer.getSheetsService();
@@ -23,6 +28,11 @@ public class Main {
     }
 
 
+    /**
+     * This is a helper function for the main to make sure that sheetsService was initialized successfully.
+     * Once the service has been confirmed as operable, it'll display the available spreadsheets & sheets that are
+     * available for the user to edit.
+     * */
     public static void testConnection() {
         try {
             // Use the Sheets service to load the spreadsheet by its ID
@@ -40,6 +50,7 @@ public class Main {
         }
     }
 
+
     /**
      * The main menu that the farm managers will use to interact with the database.
      * This menu contains the basic operations that they can do.
@@ -49,6 +60,7 @@ public class Main {
     public static void mainMenu(){
 
         Scanner input = new Scanner(System.in);
+        
         while (true){
             System.out.println("\nMain Menu: ");
             System.out.println("1: See all crops");
@@ -94,6 +106,14 @@ public class Main {
         }
     }
 
+
+    /**
+     * This is the entry point for the program. The goal is to either convert this into an interface for the user
+     * so that they can do all their database operations through the use of this JAVA API.
+     * Furthermore, if we get to doing a website, this will also be the entrypoint for said website where
+     * JavaScript will get the data to display on the webpage.
+     * Since this is the main, there is no params or returns.
+     * */
     public static void main(String[] args) {
         // Create connection to the server (Google Sheets Service)
         initializeSheetsService();
