@@ -1,8 +1,5 @@
 package org.example;
 
-import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.*;
-import org.example.auth.SheetsServiceInitializer;
 import org.example.services.GoogleSheetsService;
 
 import java.util.Scanner;
@@ -75,18 +72,13 @@ public class Main {
      * */
     public static void main(String[] args) {
         try {
-            GoogleSheetsService googleSheetsService = new GoogleSheetsService(SPREADSHEET_ID);
-            System.out.println("Successfully initialized Google Sheets service.");
-
-            // Proceed with your existing logic, e.g., testConnection(), mainMenu(), etc.
-            // Note: You may need to adjust the testConnection() method or move its logic
-            // into GoogleSheetsService as appropriate.
+            GoogleSheetsApplicationInterface service = new GoogleSheetsService(SPREADSHEET_ID); // Create an instance of the GoogleSheetsService (This is how we access the database).
+            service.testConnection(); // Test the connection to make sure we connected properly before making changes.
+            System.out.println("Available sheets: " + service.getAvailableSheets()); // Tell user what spreadsheets (sheets) they have access to!
         } catch (Exception e) {
-            System.err.println("Failed to initialize Google Sheets service.");
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
-            System.exit(1);
         }
-
 
         // Once connection to the server has been established, show menu.
         mainMenu();

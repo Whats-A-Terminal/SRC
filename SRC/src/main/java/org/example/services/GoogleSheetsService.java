@@ -1,51 +1,67 @@
 package org.example.services;
 
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import org.example.GoogleSheetsApplicationInterface;
+import org.example.auth.SheetsServiceInitializer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.Farm;
-import org.example.Crop;
-import org.example.auth.SheetsServiceInitializer;
-
-public class GoogleSheetsService {
+public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
     private Sheets sheetsService;
     private String spreadsheetId;
 
+
+    /**
+     * This is a public constructor for the GoogleSheetsService.
+     * The goal is to connect to the specific spreadsheet
+     * so that the user can edit/modify/do operations.
+     *
+     * @param spreadsheetId what specific Google Sheet to connect to.
+     * */
     public GoogleSheetsService(String spreadsheetId) throws Exception {
         SheetsServiceInitializer initializer = new SheetsServiceInitializer();
-        this.sheetsService = initializer.getSheetsService();
+        this.sheetsService = initializer.getSheets();
         this.spreadsheetId = spreadsheetId;
+
+        testConnection();
     }
 
 
-    public List<Crop> getAllCrops(String range) {
-        List<Crop> crops = new ArrayList<>();
+    /**
+     * This connection calls sheetsServiceInitializer to make sure
+     * that the connection is still active and successful.
+     * If it is, print out the title of the spreadsheet that it connected to!
+     * */
+    @Override
+    public void testConnection() throws Exception {
         try {
-            ValueRange response = sheetsService.spreadsheets().values()
-                    .get(spreadsheetId, range)
-                    .execute();
-            List<List<Object>> values = response.getValues();
-            if (values == null || values.isEmpty()) {
-                System.out.println("No data found.");
-            } else {
-                for (List<Object> row : values) {
-                    String farmName = (String) row.get(0);
-                    String farmLocation = (String) row.get(1);
-                    int cropID = Integer.parseInt((String) row.get(2));
-                    String cropName = (String) row.get(3);
-                    int quantityAvailable = Integer.parseInt((String) row.get(4));
-                    String[] harvestDate = new String[]{(String) row.get(5)};
-                    boolean inSeason = Boolean.parseBoolean((String) row.get(6));
-                    Crop crop = new Crop(farmName, farmLocation, cropID, cropName, quantityAvailable, harvestDate, inSeason);
-                    crops.add(crop);
-                }
-            }
+            // Attempt to retrieve the spreadsheet using its ID
+            Spreadsheet spreadsheet = sheetsService.spreadsheets().get(spreadsheetId).execute();
+
+            // If the spreadsheet is successfully retrieved, print a success message
+            System.out.println("Successfully connected to the spreadsheet: " + spreadsheet.getProperties().getTitle());
         } catch (IOException e) {
-            e.printStackTrace();
+            // If there's an IOException, it means the connection to the spreadsheet failed
+            System.err.println("Failed to connect to the spreadsheet: " + e.getMessage());
+            throw new Exception("Failed to test connection to the spreadsheet.", e);
+        } catch (Exception e) {
+            // Catch any other exceptions that might occur and rethrow them
+            System.err.println("An error occurred while testing the connection: " + e.getMessage());
+            throw e;
         }
-        return crops;
+    }
+
+
+    /**
+     * */
+    @Override
+    public List<String> getAvailableSheets() throws Exception {
+        List<String> sheetTitles = new ArrayList<>();
+        Spreadsheet spreadsheet = sheetsService.spreadsheets().get(spreadsheetId).execute();
+        spreadsheet.getSheets().forEach(sheet -> sheetTitles.add(sheet.getProperties().getTitle()));
+        return sheetTitles;
     }
 }
