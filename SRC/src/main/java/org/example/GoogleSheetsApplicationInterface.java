@@ -30,7 +30,15 @@ public interface GoogleSheetsApplicationInterface {
 
     //deleteSheet
 
-    //getItemsInSheet (return as Array of Objects where each object is the row with the data)
+    /**
+     * Retrieves items from a specified sheet and returns them as a list of objects.
+     * Each object represents a row in the sheet.
+     *
+     * @param sheetName The name of the sheet to retrieve items from.
+     * @return A list of objects, each representing a row in the specified sheet.
+     * @throws Exception If an error occurs during the operation.
+     */
+    List<Object> getItemsInSheet(String sheetName) throws Exception;
 
     //addData (create a new row in a specific sheet as a parameter)(maybe overload method where it can add data to specific row or to the bottom row of the sheet?)
 

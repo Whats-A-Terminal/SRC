@@ -72,8 +72,7 @@ public class Main {
      * */
     public static void main(String[] args) {
         try {
-            GoogleSheetsApplicationInterface service = new GoogleSheetsService(SPREADSHEET_ID); // Create an instance of the GoogleSheetsService (This is how we access the database).
-            service.testConnection(); // Test the connection to make sure we connected properly before making changes.
+            GoogleSheetsApplicationInterface service = new GoogleSheetsService(SPREADSHEET_ID); // Create an instance of the GoogleSheetsService (This is how we access the database). Note: It will tell us if it connected to the database!
             System.out.println("Available sheets: " + service.getAvailableSheets()); // Tell user what spreadsheets (sheets) they have access to!
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

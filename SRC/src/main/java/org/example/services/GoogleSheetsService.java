@@ -64,4 +64,15 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         spreadsheet.getSheets().forEach(sheet -> sheetTitles.add(sheet.getProperties().getTitle()));
         return sheetTitles;
     }
+
+
+    /**
+     * */
+    @Override
+    public List<Object> getItemsInSheet(String sheetName) throws Exception {
+        List<Object> items = new ArrayList<>();
+        // Implement the logic to retrieve rows from the specified sheet and convert them to your object model.
+        // This will involve calling the Google Sheets API and parsing the response.
+        return items;
+    }
 }
