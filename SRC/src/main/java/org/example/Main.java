@@ -2,10 +2,42 @@ package org.example;
 
 import org.example.services.GoogleSheetsService;
 
+import java.util.*;
 import java.util.Scanner;
 
 public class Main {
     private static final String SPREADSHEET_ID = "18ksHaCHNrr6uICxtjAjhN3Zs_YqJMwIywf-eCbcfklc"; // The Google Sheets database ID. PLEASE HIDE THIS BEFORE PRODUCTION!
+
+    private static GoogleSheetsApplicationInterface service;
+    static {
+        try {
+            service = new GoogleSheetsService(SPREADSHEET_ID);
+            System.out.println("Available sheets: " + service.getAvailableSheets());
+        } catch (Exception e) {
+            System.err.println("Initialization failed: " + e.getMessage());
+            e.printStackTrace();
+            // Handle initialization failure, e.g., exit the program or set service to null.
+        }
+    }
+
+    private static Stack<Object> changesToRow = new Stack<>(); // Proposed changes for a row will be kept here.
+    private static List<Object> dataRow = new ArrayList<>(); // Every row and corresponding data will be here.
+
+
+    private static void displayCrops(List<Crop> crops) {
+        if (crops.isEmpty()) {
+            System.out.println("No crops found.");
+        } else {
+            System.out.println("\nList of Crops:");
+            for (Crop crop : crops) {
+                System.out.println("Crop ID: " + crop.getCropID() +
+                        ", Crop Name: " + crop.getCropName() +
+                        ", Quantity: " + crop.getQuantityAvailable() +
+                        ", Harvest Date: " + crop.getHarvestDate() +
+                        ", In Season: " + crop.isInSeason());
+            }
+        }
+    }
 
 
     /**
@@ -37,6 +69,13 @@ public class Main {
 
                 case 1:
                     System.out.println("\nShowing you all crops...");
+                    try {
+                        // Assuming "Crops" is the name of your sheet
+                        List<Crop> crops = service.<Crop>getItemsInSheet("Sheet1");
+                        displayCrops(crops);
+                    } catch (Exception e) {
+                        System.err.println("Failed to fetch crops: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
@@ -71,13 +110,6 @@ public class Main {
      * Since this is the main, there is no params or returns.
      * */
     public static void main(String[] args) {
-        try {
-            GoogleSheetsApplicationInterface service = new GoogleSheetsService(SPREADSHEET_ID); // Create an instance of the GoogleSheetsService (This is how we access the database). Note: It will tell us if it connected to the database!
-            System.out.println("Available sheets: " + service.getAvailableSheets()); // Tell user what spreadsheets (sheets) they have access to!
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
 
         // Once connection to the server has been established, show menu.
         mainMenu();

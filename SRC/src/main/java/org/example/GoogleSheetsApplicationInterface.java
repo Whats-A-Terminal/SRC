@@ -38,7 +38,7 @@ public interface GoogleSheetsApplicationInterface {
      * @return A list of objects, each representing a row in the specified sheet.
      * @throws Exception If an error occurs during the operation.
      */
-    List<Object> getItemsInSheet(String sheetName) throws Exception;
+    <T> List<T> getItemsInSheet(String sheetName) throws Exception;
 
     //addData (create a new row in a specific sheet as a parameter)(maybe overload method where it can add data to specific row or to the bottom row of the sheet?)
 

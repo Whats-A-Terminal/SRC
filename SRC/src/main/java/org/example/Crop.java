@@ -4,11 +4,11 @@ public class Crop extends Farm{
     private final int cropID;
     private final String cropName;
     private int quantityAvailable;
-    private String[] harvestDate;
+    private String harvestDate;
     private boolean inSeason;
 
     public Crop(int cropID, String cropName, int quantityAvailable,
-                String[] harvestDate, boolean inSeason){
+                String harvestDate, boolean inSeason){
         super("unknown", "unknown");
         this.cropID = cropID;
         this.cropName = cropName;
@@ -18,7 +18,7 @@ public class Crop extends Farm{
     }
 
     public Crop(String farmName, String farmLocation, int cropID,
-                String cropName, int quantityAvailable, String[] harvestDate,
+                String cropName, int quantityAvailable, String harvestDate,
                 boolean inSeason){
         super(farmName, farmLocation);
         this.cropID = cropID;
@@ -41,7 +41,7 @@ public class Crop extends Farm{
         return quantityAvailable;
     }
 
-    public String[] getHarvestDate() {
+    public String getHarvestDate() {
         return harvestDate;
     }
 
@@ -55,7 +55,7 @@ public class Crop extends Farm{
         this.quantityAvailable = quantityAvailable;
     }
 
-    public void setHarvestDate(String[] harvestDate) {
+    public void setHarvestDate(String harvestDate) {
         this.harvestDate = harvestDate;
     }
 

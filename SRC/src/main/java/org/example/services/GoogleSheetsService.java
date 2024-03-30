@@ -2,6 +2,8 @@ package org.example.services;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import org.example.Crop;
 import org.example.GoogleSheetsApplicationInterface;
 import org.example.auth.SheetsServiceInitializer;
 
@@ -10,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
-    private Sheets sheetsService;
-    private String spreadsheetId;
+    private final Sheets sheetsService;
+    private final String spreadsheetId;
 
 
     /**
@@ -68,11 +70,37 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
 
     /**
      * */
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Object> getItemsInSheet(String sheetName) throws Exception {
-        List<Object> items = new ArrayList<>();
-        // Implement the logic to retrieve rows from the specified sheet and convert them to your object model.
-        // This will involve calling the Google Sheets API and parsing the response.
-        return items;
+    public <T> List<T> getItemsInSheet(String sheetName) throws Exception {
+        List<Crop> crops = new ArrayList<>();
+        String range = sheetName + "!B3:H";
+        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
+        List<List<Object>> values = response.getValues();
+        if (values == null || values.isEmpty()) {
+            System.out.println("No data found.");
+        } else {
+            for (List<Object> row : values) {
+                try {
+                    // Directly parse and assign values, with proper exception handling
+                    String farmName = (String) row.get(0);
+                    String farmLocation = (String) row.get(1);
+                    int cropID = Integer.parseInt(row.get(2).toString());
+                    String cropName = (String) row.get(3);
+                    int quantityAvailable = Integer.parseInt(row.get(4).toString());
+                    String harvestDate = (String) row.get(5);
+                    boolean inSeason = "TRUE".equalsIgnoreCase(row.get(6).toString());
+
+                    crops.add(new Crop(farmName, farmLocation, cropID, cropName, quantityAvailable, harvestDate, inSeason));
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing numeric value: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error parsing row: " + e.getMessage());
+                }
+            }
+        }
+        return (List<T>) crops;
     }
+
+
 }
