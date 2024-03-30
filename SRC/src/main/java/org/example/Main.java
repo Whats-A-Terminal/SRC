@@ -17,6 +17,7 @@ public class Main {
             System.err.println("Initialization failed: " + e.getMessage());
             e.printStackTrace();
             // Handle initialization failure, e.g., exit the program or set service to null.
+            System.exit(1);
         }
     }
 
