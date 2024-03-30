@@ -8,8 +8,7 @@ import org.example.GoogleSheetsApplicationInterface;
 import org.example.auth.SheetsServiceInitializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
     private final Sheets sheetsService;
@@ -102,5 +101,23 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         return (List<T>) crops;
     }
 
+    @Override
+    public void addDataRow(String sheetName, List<Object> data) throws Exception {
+        // Specify the range and value input option for appending data
+        String range = sheetName; // The name of the sheet to append data
+        String valueInputOption = "USER_ENTERED"; // Allows input as if entered by the user, including formulas
+
+        // Prepare the new row to be added
+        ValueRange body = new ValueRange().setValues(Arrays.asList(data));
+
+        // Append the data
+        sheetsService.spreadsheets().values().append(spreadsheetId, range, body)
+                .setValueInputOption(valueInputOption)
+                .setInsertDataOption("INSERT_ROWS")
+                .setIncludeValuesInResponse(true)
+                .execute();
+
+        System.out.println("Data row successfully added to sheet: " + sheetName);
+    }
 
 }

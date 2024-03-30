@@ -81,6 +81,15 @@ public class Main {
 
                 case 2:
                     System.out.println("\nAdding new crop...");
+                    // Collect crop details from the user
+                    // Example: Scanner to read input, then:
+                    List<Object> newRowData = Arrays.asList("Test", "Test", 100, "Test", "0", "1/1/2001", false);
+                    try {
+                        service.addDataRow("Sheet1", newRowData); // Replace "SheetName" with your actual sheet name
+                        System.out.println("New crop added successfully.");
+                    } catch (Exception e) {
+                        System.err.println("Failed to add new crop: " + e.getMessage());
+                    }
                     break;
 
                 case 3:

@@ -4,14 +4,12 @@ import java.util.List;
 
 public interface GoogleSheetsApplicationInterface {
 
-
     /**
      * This method tests the connection of the server (Google Cloud Compute)(GCC)
      * and the GCC Google Sheets API.
      * If it cannot connect, it throws an error (and from the Main the program will be terminated with an error message).
      * */
     void testConnection() throws Exception;
-
 
     /**
      * This method returns a List of Strings that indicate what the available sheets are for modification.
@@ -22,8 +20,7 @@ public interface GoogleSheetsApplicationInterface {
      * @return List<String>availableSheets</String> sheets that are available in the spreadsheet.
      * */
     List<String> getAvailableSheets() throws Exception;
-
-
+    
     // Methods to add later...
 
     //createNewSheet
@@ -40,7 +37,14 @@ public interface GoogleSheetsApplicationInterface {
      */
     <T> List<T> getItemsInSheet(String sheetName) throws Exception;
 
-    //addData (create a new row in a specific sheet as a parameter)(maybe overload method where it can add data to specific row or to the bottom row of the sheet?)
+    /**
+     * Adds a new row of data to the end of a specified sheet.
+     *
+     * @param sheetName The name of the sheet where the data will be added.
+     * @param data The data to be added as a new row.
+     * @throws Exception If an error occurs during the operation.
+     */
+    void addDataRow(String sheetName, List<Object> data) throws Exception;
 
     //deleteData (delete row in specific spreadsheet)
 
