@@ -2,7 +2,7 @@ package org.example;
 
 public class Crop extends Farm{
     private final int cropID;
-    private final String cropName;
+    private String cropName;
     private int quantityAvailable;
     private String harvestDate;
     private boolean inSeason;
@@ -50,7 +50,10 @@ public class Crop extends Farm{
     }
 
     // Setters
-    // Note: No setter for cropID and cropName because they are final
+    // Note: No setter for cropID because they are final
+
+    public void setCropName(String cropName){this.cropName = cropName;}
+
     public void setQuantityAvailable(int quantityAvailable) {
         this.quantityAvailable = quantityAvailable;
     }

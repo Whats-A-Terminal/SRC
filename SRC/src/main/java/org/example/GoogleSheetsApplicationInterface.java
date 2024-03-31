@@ -20,22 +20,18 @@ public interface GoogleSheetsApplicationInterface {
      * @return List<String>availableSheets</String> sheets that are available in the spreadsheet.
      * */
     List<String> getAvailableSheets() throws Exception;
-    
-    // Methods to add later...
 
-    //createNewSheet
 
-    //deleteSheet
+    //Todo: Create method void createNewSheet(String sheetName) throws Exception; that allows the user to CREATE a new Google Sheet sheet.
+
+    //Todo: Create method void deleteSheet(String sheetName) throws Exception; that allows the user to DELETE a specific Google Sheet sheet.
 
     /**
      * Retrieves items from a specified sheet and returns them as a list of objects.
      * Each object represents a row in the sheet.
      *
-     * @param sheetName The name of the sheet to retrieve items from.
-     * @return A list of objects, each representing a row in the specified sheet.
-     * @throws Exception If an error occurs during the operation.
      */
-    <T> List<T> getItemsInSheet(String sheetName) throws Exception;
+    List<Crop> getItemsInSheet(String sheetName) throws Exception;
 
     /**
      * Adds a new row of data to the end of a specified sheet.
@@ -46,7 +42,15 @@ public interface GoogleSheetsApplicationInterface {
      */
     void addDataRow(String sheetName, List<Object> data) throws Exception;
 
-    //deleteData (delete row in specific spreadsheet)
+    // Todo: addDataRow(String sheetName, List<Object> data, int cropID), to add a crop in a specific row of the spreadsheet. Push all other crops down and all 1 to cropID.
 
-    //modifyData (modify the contents of a specific row)
+    /**
+     * */
+    boolean checkAndDisplayCrop(String sheetName, int cropID, List<Crop> data) throws Exception;
+
+    //Todo: Create method void deleteData (delete row in specific spreadsheet)
+
+    /**
+     * */
+    void updateCrop(String sheetName, Crop crop) throws Exception;
 }
