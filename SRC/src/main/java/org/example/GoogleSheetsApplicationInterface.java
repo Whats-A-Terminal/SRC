@@ -5,52 +5,58 @@ import java.util.List;
 public interface GoogleSheetsApplicationInterface {
 
     /**
-     * This method tests the connection of the server (Google Cloud Compute)(GCC)
-     * and the GCC Google Sheets API.
-     * If it cannot connect, it throws an error (and from the Main the program will be terminated with an error message).
-     * */
+     * Tests the connection to the Google Sheets API.
+     * Throws an exception if the connection cannot be established.
+     * @throws Exception if unable to connect to the Google Sheets API.
+     */
     void testConnection() throws Exception;
 
     /**
-     * This method returns a List of Strings that indicate what the available sheets are for modification.
-     * This is useful as Spreadsheets typically have multiple sheets for different purposes.
-     * For example, in the Farm spreadsheet, one sheet can be dedicated to Crops,
-     * while another is dedicated to Animals, etc.
-     *
-     * @return List<String>availableSheets</String> sheets that are available in the spreadsheet.
-     * */
+     * Retrieves a list of available sheet names in the spreadsheet.
+     * @return A List of Strings representing the names of the sheets available.
+     * @throws Exception if an error occurs during the operation.
+     */
     List<String> getAvailableSheets() throws Exception;
 
-
-    //Todo: Create method void createNewSheet(String sheetName) throws Exception; that allows the user to CREATE a new Google Sheet sheet.
-
-    //Todo: Create method void deleteSheet(String sheetName) throws Exception; that allows the user to DELETE a specific Google Sheet sheet.
-
     /**
-     * Retrieves items from a specified sheet and returns them as a list of objects.
-     * Each object represents a row in the sheet.
-     *
+     * Retrieves a list of Crop objects from a specified sheet.
+     * @param sheetName The name of the sheet to retrieve items from.
+     * @return A List of Crop objects representing each row in the specified sheet.
+     * @throws Exception if an error occurs during the operation.
      */
     List<Crop> getItemsInSheet(String sheetName) throws Exception;
 
     /**
-     * Adds a new row of data to the end of a specified sheet.
-     *
-     * @param sheetName The name of the sheet where the data will be added.
-     * @param data The data to be added as a new row.
-     * @throws Exception If an error occurs during the operation.
+     * Adds a new Crop object as a row to the end of the specified sheet.
+     * @param crop The Crop object to be added as a new row.
+     * @throws Exception if an error occurs during the operation.
      */
-    void addDataRow(String sheetName, List<Object> data) throws Exception;
-
-    // Todo: addDataRow(String sheetName, List<Object> data, int cropID), to add a crop in a specific row of the spreadsheet. Push all other crops down and all 1 to cropID.
+    void addDataRow(Crop crop) throws Exception;
 
     /**
-     * */
-    boolean checkAndDisplayCrop(String sheetName, int cropID, List<Crop> data) throws Exception;
-
-    //Todo: Create method void deleteData (delete row in specific spreadsheet)
+     * Checks the existence of a Crop by its ID and displays its information.
+     * @param crop The Crop object to check and display.
+     * @return true if the crop exists in the sheet, false otherwise.
+     * @throws Exception if an error occurs during the operation.
+     */
+    boolean checkAndDisplayCrop(Crop crop) throws Exception;
 
     /**
-     * */
-    void updateCrop(String sheetName, Crop crop) throws Exception;
+     * Updates an existing Crop object's corresponding row in its sheet.
+     * @param crop The Crop object to update.
+     * @throws Exception if an error occurs during the operation or if the Crop ID is not found.
+     */
+    void updateCrop(Crop crop) throws Exception;
+
+    /**
+     * Clears the data for a given Crop object's corresponding row in its sheet.
+     * Note: This operation does not delete the row to maintain the integrity of the sheet's structure.
+     * @param crop The Crop object to clear data for.
+     * @throws Exception if an error occurs during the operation or if the Crop ID is not found.
+     */
+    void deleteDataRow(Crop crop) throws Exception;
+
+    // Optional or future implementations:
+    // void createNewSheet(String sheetName) throws Exception;
+    // void deleteSheet(String sheetName) throws Exception;
 }
