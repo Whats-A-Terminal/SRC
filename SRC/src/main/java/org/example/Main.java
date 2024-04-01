@@ -72,6 +72,8 @@ public class Main {
      * @throws Exception if there's an issue with sheet verification or updating the crop data.
      */
     private static void manageCropData() throws Exception {
+        getAndVerifySheets(); // Select sheet to work from.
+
         String action = "add"; // Placeholder for user action (add, modify, delete)
         Crop crop = new Crop(); // Assume creation or selection of a Crop object
 
