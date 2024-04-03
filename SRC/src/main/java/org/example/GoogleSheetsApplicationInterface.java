@@ -56,6 +56,8 @@ public interface GoogleSheetsApplicationInterface {
      */
     void deleteDataRow(Crop crop) throws Exception;
 
+    String getSheetIdByName(String sheetName) throws Exception;
+
     // Optional or future implementations:
     // void createNewSheet(String sheetName) throws Exception;
     // void deleteSheet(String sheetName) throws Exception;

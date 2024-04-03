@@ -54,6 +54,23 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         return sheetInfo;
     }
 
+
+    /**
+     * Returns the sheet ID for the given sheet name.
+     *
+     * @param sheetName The name of the sheet for which the ID is desired.
+     * @return The sheet ID corresponding to the given sheet name.
+     * @throws Exception If an error occurs during the operation or if the sheet name does not exist.
+     */
+    public String getSheetIdByName(String sheetName) throws Exception {
+        Map<String, String> sheetInfo = getSheetNamesAndIds();
+        String sheetID = sheetInfo.get(sheetName);
+        if (sheetID == null) {
+            throw new Exception("Sheet name '" + sheetName + "' does not exist.");
+        }
+        return sheetID;
+    }
+
     @Override
     public List<Crop> getItemsInSheet(String sheetName) throws Exception {
         Map<String, String> sheetInfo = getSheetNamesAndIds();
@@ -146,10 +163,73 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         return true; // or determine existence based on some criteria
     }
 
+
     @Override
     public void updateCrop(Crop crop) throws Exception {
+        // Search for the crop ID in the sheet to find the row number
+        String searchRange = crop.getSheetName() + "!D4:D"; // Assuming Crop ID is in column D
+        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, searchRange).execute();
+        List<List<Object>> values = response.getValues();
 
+        boolean found = false;
+        int rowIndexToUpdate = -1;
+
+        if (values != null) {
+            for (int i = 0; i < values.size(); i++) {
+                List<Object> row = values.get(i);
+                if (!row.isEmpty() && row.get(0) != null && row.get(0).toString().equals(String.valueOf(crop.getCropID()))) {
+                    rowIndexToUpdate = i + 4; // Adding 4 because data starts at row 4
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            System.out.println("Crop with ID " + crop.getCropID() + " not found.");
+            return;
+        }
+
+        // Preparing the list of data to update
+        List<Object> rowData = Arrays.asList(
+                crop.getFarmName(),
+                crop.getFarmLocation(),
+                crop.getCropID(), // Assuming cropID is an Integer. No need to convert to String
+                crop.getCropName(),
+                crop.getQuantityAvailable(), // Assuming quantityAvailable is an Integer
+                crop.getHarvestDate(),
+                crop.isInSeason() ? "TRUE" : "FALSE"
+        );
+
+        // Update range to include the found row index
+        String updateRange = crop.getSheetName() + "!B" + rowIndexToUpdate + ":H" + rowIndexToUpdate;
+        ValueRange body = new ValueRange().setValues(Collections.singletonList(rowData));
+
+        // Performing the update
+        UpdateValuesResponse updateResponse = sheetsService.spreadsheets().values()
+                .update(spreadsheetId, updateRange, body)
+                .setValueInputOption("USER_ENTERED")
+                .execute();
+
+        System.out.println("Updated crop with ID " + crop.getCropID() + ". Rows updated: " + updateResponse.getUpdatedRows());
     }
+
+    private boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            Integer.parseInt(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
 
 
     @Override

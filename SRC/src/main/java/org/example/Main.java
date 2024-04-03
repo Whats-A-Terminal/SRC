@@ -86,31 +86,49 @@ public class Main {
      * Allows the user to select and verify the sheet they wish to work with. Updates the dataRow with the data
      * from the selected sheet.
      *
+     * @return The name of the sheet selected by the user.
      * @throws Exception if there's an issue fetching the available sheets or items from the sheet.
      */
-    private static void getAndVerifySheets() throws Exception {
+    private static String getAndVerifySheets() throws Exception {
         System.out.println("\nAvailable sheets:");
         List<String> availableSheets = service.getAvailableSheets();
         availableSheets.forEach(System.out::println);
 
-        System.out.print("Enter the name of the sheet to modify: ");
-        String sheetName = input.nextLine().trim();
+        String sheetName = "";
+        boolean validSheetSelected = false;
+        while (!validSheetSelected) {
+            System.out.print("Enter the name of the sheet to modify: ");
+            sheetName = input.nextLine().trim();
 
-        if (!availableSheets.contains(sheetName)) {
-            System.out.println("Invalid sheet name.");
-            return;
+            if (!availableSheets.contains(sheetName)) {
+                System.out.println("Invalid sheet name. Please try again.");
+            } else {
+                validSheetSelected = true; // A valid sheet name has been entered; exit the loop.
+            }
         }
 
-        // After user is done choosing a sheet, clear everything in the dataRow
-        // to prepare array for loading database.
+        // Fetch the sheetID for the selected sheetName
+        String sheetID = ((GoogleSheetsService) service).getSheetIdByName(sheetName);
+        if (sheetID == null) {
+            System.out.println("Could not find an ID for the sheet named: " + sheetName);
+            // TODO: Consider how you want to handle this unlikely case. For now, return the sheetName anyway.
+        }
+
+        // Clear the dataRow and load crops from the selected sheet.
         dataRow.clear();
+        List<Crop> crops = service.getItemsInSheet(sheetName);
+        String finalSheetName = sheetName;
+        crops.forEach(crop -> {
+            crop.setSheetName(finalSheetName);
+            crop.setSheetID(sheetID);
+        });
+        dataRow.addAll(crops);
 
-        // Add all data from database into local array.
-        dataRow.addAll(service.getItemsInSheet(sheetName));
+        System.out.println("Selected sheet: " + sheetName + " with " + dataRow.size() + " crops loaded and sheet ID: " + sheetID);
 
-        // Print message for user.
-        System.out.println("Selected sheet: " + sheetName + " with " + dataRow.size() + " crops loaded.");
+        return sheetName;
     }
+
 
 
     /** Prompts the user for a string and validates that it's not empty
@@ -201,7 +219,7 @@ public class Main {
 
     /**
      * */
-    private static void addNewCrop() {
+    private static void addNewCrop(String sheetName) throws Exception {
         System.out.println("\nAdding a new crop.");
 
         String farmName = promptForString("\nEnter farm name: ");
@@ -222,8 +240,7 @@ public class Main {
         boolean inSeason = promptForBoolean("Is the crop in season?");
 
         // TODO: GET SHEETNAME AND SHEETID FROM SERVICE AS USER SHOULDN'T KNOW HOW THIS WORKS!!!
-        String sheetName = "";
-        String sheetID = "";
+        String sheetID = service.getSheetIdByName(sheetName);
 
         Crop newCrop = new Crop(farmName, farmLocation, cropID, cropName, quantityAvailable, harvestDate, inSeason, sheetName, sheetID);
         changesToRow.add(newCrop);
@@ -276,7 +293,8 @@ public class Main {
                     cropToModify.setQuantityAvailable(promptForInt("Enter new quantity available: "));
                     break;
                 case 3:
-                    cropToModify.setHarvestDate(promptForString("Enter new harvest date (YYYY-MM-DD): "));
+                    // TODO: MAKE SURE USER INPUTS CORRECT FORMAT MM-DD-YYYY
+                    cropToModify.setHarvestDate(promptForString("Enter new harvest date (MM-DD-YYYY): "));
                     break;
                 case 4:
                     cropToModify.setInSeason(promptForBoolean("Is the crop in season? (yes/no): "));
@@ -334,14 +352,14 @@ public class Main {
      * @throws Exception if there's an issue with sheet verification or updating the crop data.
      */
     private static void manageCropData() throws Exception {
-        getAndVerifySheets(); // Select sheet to work from.
+        String sheetName = getAndVerifySheets(); // Select sheet to work from.
 
         System.out.print("\nWhat would you like to do? (add, modify, delete): ");
         String action = input.nextLine().trim().toLowerCase();
 
         switch (action) {
             case "add":
-                addNewCrop();
+                addNewCrop(sheetName);
                 break;
             case "modify":
                 modifyCrop();
