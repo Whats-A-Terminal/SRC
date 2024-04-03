@@ -137,22 +137,45 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
 
     @Override
     public void addDataRow(Crop crop) throws Exception {
-        String range = crop.getSheetName() + "!A1";
-        List<List<Object>> values = Arrays.asList(
+        // First, find the first empty row in column D starting from row 4
+        String rangeToSearch = crop.getSheetName() + "!D4:D";
+        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, rangeToSearch).execute();
+        List<List<Object>> values = response.getValues();
+
+        int firstEmptyRow = 4; // Start searching from row 4
+        if (values != null) {
+            for (List<Object> row : values) {
+                if (row.isEmpty() || row.get(0) == null || row.get(0).toString().trim().isEmpty()) {
+                    break; // Found the first empty row
+                }
+                firstEmptyRow++;
+            }
+        }
+
+        // Now, prepare the data to insert for the new crop
+        List<List<Object>> dataToAdd = Arrays.asList(
                 Arrays.asList(
-                        // Assuming a Crop object can provide its data in the correct order
-                        crop.getFarmName(), crop.getFarmLocation(), String.valueOf(crop.getCropID()),
-                        crop.getCropName(), String.valueOf(crop.getQuantityAvailable()),
-                        crop.getHarvestDate(), String.valueOf(crop.isInSeason())
+                        crop.getFarmName(), // Column B
+                        crop.getFarmLocation(), // Column C
+                        String.valueOf(crop.getCropID()), // Column D
+                        crop.getCropName(), // Column E
+                        String.valueOf(crop.getQuantityAvailable()), // Column F
+                        crop.getHarvestDate(), // Column G
+                        crop.isInSeason() ? "TRUE" : "FALSE" // Column H
                 )
         );
 
-        ValueRange body = new ValueRange().setValues(values);
-        sheetsService.spreadsheets().values().append(spreadsheetId, range, body)
-                .setValueInputOption("RAW")
-                .setInsertDataOption("INSERT_ROWS")
-                .execute();
+        // Set the range to insert the new data starting from the first empty row found
+        String updateRange = crop.getSheetName() + "!B" + firstEmptyRow + ":H" + firstEmptyRow;
+        ValueRange body = new ValueRange().setValues(dataToAdd);
+
+        // Insert the new crop data into the sheet
+        UpdateValuesResponse result = sheetsService.spreadsheets().values().update(spreadsheetId, updateRange, body)
+                .setValueInputOption("USER_ENTERED").execute();
+
+        System.out.println("Added new crop data at row " + firstEmptyRow + ". Rows updated: " + result.getUpdatedRows());
     }
+
 
 
     @Override
@@ -165,7 +188,8 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
 
 
     @Override
-    public void updateCrop(Crop crop) throws Exception {
+    public void updateDataRow(Crop crop) throws Exception {
+
         // Search for the crop ID in the sheet to find the row number
         String searchRange = crop.getSheetName() + "!D4:D"; // Assuming Crop ID is in column D
         ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, searchRange).execute();

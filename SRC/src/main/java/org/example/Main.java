@@ -243,6 +243,7 @@ public class Main {
         String sheetID = service.getSheetIdByName(sheetName);
 
         Crop newCrop = new Crop(farmName, farmLocation, cropID, cropName, quantityAvailable, harvestDate, inSeason, sheetName, sheetID);
+        newCrop.setCropChanges(1); // Set flag to let changesToRow know that this is a new addition to database.
         changesToRow.add(newCrop);
         System.out.println("New crop added and staged for changes.");
     }
@@ -288,16 +289,20 @@ public class Main {
             switch (choice) {
                 case 1:
                     cropToModify.setCropName(promptForString("Enter new crop name: "));
+                    cropToModify.setCropChanges(2); // Flag Crop since it was changed from its original state.
                     break;
                 case 2:
                     cropToModify.setQuantityAvailable(promptForInt("Enter new quantity available: "));
+                    cropToModify.setCropChanges(2); // Flag Crop since it was changed from its original state.
                     break;
                 case 3:
                     // TODO: MAKE SURE USER INPUTS CORRECT FORMAT MM-DD-YYYY
                     cropToModify.setHarvestDate(promptForString("Enter new harvest date (MM-DD-YYYY): "));
+                    cropToModify.setCropChanges(2); // Flag Crop since it was changed from its original state.
                     break;
                 case 4:
                     cropToModify.setInSeason(promptForBoolean("Is the crop in season? (yes/no): "));
+                    cropToModify.setCropChanges(2); // Flag Crop since it was changed from its original state.
                     break;
                 case 5:
                     finished = true;
@@ -333,6 +338,8 @@ public class Main {
             System.out.println("No crop with the specified ID found.");
             return;
         }
+
+        cropToDelete.setCropChanges(3); // Let changesToRow know that this will be deleted.
 
         // Assuming cropToDelete is the Crop object you want to delete
         service.deleteDataRow(cropToDelete);
@@ -380,13 +387,27 @@ public class Main {
      */
     private static void pushChanges() throws Exception {
         while (!changesToRow.isEmpty()) {
-            Crop crop = changesToRow.poll();
-            // Determine the action based on crop state (new, modified, deleted)
-            // For simplicity, assuming all changes are updates
-            service.updateCrop(crop);
-            System.out.println("Crop ID " + crop.getCropID() + " updated.");
+            Crop crop = changesToRow.poll(); // Retrieve and remove the head of the queue
+            switch (crop.getCropChanges()) {
+                case 1: // Add new crop
+                    service.addDataRow(crop);
+                    System.out.println("New crop with ID " + crop.getCropID() + " added to the database.");
+                    break;
+                case 2: // Modify existing crop
+                    service.updateDataRow(crop);
+                    System.out.println("Crop with ID " + crop.getCropID() + " was modified in the database.");
+                    break;
+                case 3: // Delete crop
+                    service.deleteDataRow(crop);
+                    System.out.println("Crop with ID " + crop.getCropID() + " was deleted from the database.");
+                    break;
+                default:
+                    System.out.println("Unrecognized crop change for ID " + crop.getCropID());
+                    break;
+            }
         }
     }
+
 
     /**
      * Displays the main menu, allowing the user to choose operations like displaying crops, managing crop data, or pushing changes.

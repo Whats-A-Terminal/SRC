@@ -46,7 +46,7 @@ public interface GoogleSheetsApplicationInterface {
      * @param crop The Crop object to update.
      * @throws Exception if an error occurs during the operation or if the Crop ID is not found.
      */
-    void updateCrop(Crop crop) throws Exception;
+    void updateDataRow(Crop crop) throws Exception;
 
     /**
      * Clears the data for a given Crop object's corresponding row in its sheet.
@@ -57,6 +57,7 @@ public interface GoogleSheetsApplicationInterface {
     void deleteDataRow(Crop crop) throws Exception;
 
     String getSheetIdByName(String sheetName) throws Exception;
+
 
     // Optional or future implementations:
     // void createNewSheet(String sheetName) throws Exception;
