@@ -227,41 +227,33 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
     }
 
 
-
-
-
-
-
     @Override
     public void deleteDataRow(Crop crop) throws Exception {
-        // Find the row of the crop to be deleted
-        String range = crop.getSheetName() + "!B2:H";
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
+        // Assuming Crop ID is in column D, starting from row 4
+        String searchRange = crop.getSheetName() + "!D4:D";
+        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, searchRange).execute();
         List<List<Object>> values = response.getValues();
-        int rowToClear = -1;
+
+        int rowIndexToDelete = -1;
         if (values != null) {
             for (int i = 0; i < values.size(); i++) {
                 List<Object> row = values.get(i);
-                int cropID = Integer.parseInt((String)row.get(2)); // Assuming cropID is at index 2
-                if (cropID == crop.getCropID()) {
-                    rowToClear = i + 2; // Account for array starting at 0 and header row
+                if (!row.isEmpty() && row.get(0) != null && row.get(0).toString().equals(String.valueOf(crop.getCropID()))) {
+                    rowIndexToDelete = i + 4; // Rows start at 1, and header is at row 3
                     break;
                 }
             }
         }
 
-        if (rowToClear == -1) {
-            System.out.println("Crop ID " + crop.getCropID() + " not found.");
+        if (rowIndexToDelete == -1) {
+            System.out.println("Crop with ID " + crop.getCropID() + " not found.");
             return;
         }
 
-        // Clear the contents of the row
-        String clearRange = crop.getSheetName() + "!B" + rowToClear + ":H" + rowToClear;
-        ClearValuesRequest clearRequest = new ClearValuesRequest();
-        sheetsService.spreadsheets().values().clear(spreadsheetId, clearRange, clearRequest).execute();
-
-        System.out.println("Contents of Crop ID " + crop.getCropID() + " have been cleared.");
+        // Clear the contents of the found row in the sheet
+        String clearRange = crop.getSheetName() + "!B" + rowIndexToDelete + ":H" + rowIndexToDelete;
+        sheetsService.spreadsheets().values().clear(spreadsheetId, clearRange, new ClearValuesRequest()).execute();
+        System.out.println("Crop with ID " + crop.getCropID() + " has been cleared from the sheet.");
     }
-
 
 }

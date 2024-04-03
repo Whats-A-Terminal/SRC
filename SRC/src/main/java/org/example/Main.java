@@ -322,7 +322,7 @@ public class Main {
 
     /**
      * */
-    private static void deleteCrop() {
+    private static void deleteCrop() throws Exception {
         System.out.println("Deleting a crop.");
 
         int cropID = promptForInt("Enter the crop ID of the crop you wish to delete: ");
@@ -334,12 +334,11 @@ public class Main {
             return;
         }
 
-        // Here, we're assuming deletion means removing from dataRow
-        // You might need to adjust based on your application's needs
-        dataRow.remove(cropToDelete);
-        // If you have a different method of marking a crop as deleted for changesToRow, do that here
+        // Assuming cropToDelete is the Crop object you want to delete
+        service.deleteDataRow(cropToDelete);
+        dataRow.removeIf(c -> c.getCropID() == cropToDelete.getCropID());
+        System.out.println("Crop with ID " + cropToDelete.getCropID() + " has been removed from local data.");
 
-        System.out.println("Crop deleted and changes staged.");
     }
 
 
