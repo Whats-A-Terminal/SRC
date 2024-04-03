@@ -29,17 +29,56 @@ public class Main {
         if (dataRow.isEmpty()) {
             System.out.println("\nNo crops found.");
         } else {
-            System.out.println("\nList of Crops:");
+            // Determine the maximum length of each field to ensure proper alignment
+            int maxIdLength = "Crop ID".length();
+            int maxNameLength = "Crop Name".length();
+            int maxQuantityLength = "Quantity".length();
+            int maxHarvestDateLength = "Harvest Date".length();
+            int maxSeasonLength = "In Season".length();
+            int maxSheetNameLength = "Sheet Name".length();
+
             for (Crop crop : dataRow) {
-                System.out.println("Crop ID: " + crop.getCropID() +
-                        ", Crop Name: " + crop.getCropName() +
-                        ", Quantity: " + crop.getQuantityAvailable() +
-                        ", Harvest Date: " + crop.getHarvestDate() +
-                        ", In Season: " + crop.isInSeason() +
-                        ", Sheet Name: " + crop.getSheetName());
+                maxIdLength = Math.max(maxIdLength, String.valueOf(crop.getCropID()).length());
+                maxNameLength = Math.max(maxNameLength, crop.getCropName().length());
+                maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(crop.getQuantityAvailable()).length());
+                maxHarvestDateLength = Math.max(maxHarvestDateLength, crop.getHarvestDate().toString().length());
+                maxSeasonLength = Math.max(maxSeasonLength, String.valueOf(crop.isInSeason()).length());
+                maxSheetNameLength = Math.max(maxSheetNameLength, crop.getSheetName().length());
+            }
+
+            // Print header
+            System.out.printf("\n%-" + maxIdLength + "s  %-"
+                            + maxNameLength + "s  %-"
+                            + maxQuantityLength + "s  %-"
+                            + maxHarvestDateLength + "s  %-"
+                            + maxSeasonLength + "s  %-"
+                            + maxSheetNameLength + "s%n",
+                    "Crop ID", "Crop Name", "Quantity", "Harvest Date", "In Season", "Sheet Name");
+
+            // Print a line under the header for better visual separation
+            for (int i = 0; i < maxIdLength + maxNameLength + maxQuantityLength + maxHarvestDateLength + maxSeasonLength + maxSheetNameLength + 10; i++) {
+                System.out.print("-");
+            }
+            System.out.println();
+
+            // Print each row
+            for (Crop crop : dataRow) {
+                System.out.printf("%-" + maxIdLength + "d  %-"
+                                + maxNameLength + "s  %-"
+                                + maxQuantityLength + "d  %-"
+                                + maxHarvestDateLength + "s  %-"
+                                + maxSeasonLength + "s  %-"
+                                + maxSheetNameLength + "s%n",
+                        crop.getCropID(),
+                        crop.getCropName(),
+                        crop.getQuantityAvailable(),
+                        crop.getHarvestDate(),
+                        crop.isInSeason() ? "Yes" : "No",
+                        crop.getSheetName());
             }
         }
     }
+
 
     /**
      * Allows the user to select and verify the sheet they wish to work with. Updates the dataRow with the data
