@@ -56,10 +56,28 @@ public interface GoogleSheetsApplicationInterface {
      */
     void deleteDataRow(Crop crop) throws Exception;
 
+    /**
+     * Retrieves the unique sheet ID associated with a given sheet name within a Google Spreadsheet.
+     * This method is essential for operations that require a sheet's ID for data manipulation and querying,
+     * allowing for a more intuitive access by using the sheet's name rather than its numeric ID.
+     * <p>
+     * The implementation of this method should handle the querying of the Google Sheets API to find the sheet
+     * by name and return its corresponding ID. It is expected to throw an exception if the sheet name
+     * does not exist or if there's an issue accessing the Google Sheets API, such as network problems or
+     * authentication/authorization failures.
+     *
+     * @param sheetName The name of the sheet for which the ID is being requested. This should be the exact
+     *                  name of the sheet as it appears in the Google Spreadsheet.
+     * @return A string representing the unique sheet ID associated with the specified sheet name. The format
+     *         of the sheet ID is determined by Google Sheets API conventions.
+     * @throws Exception If the sheet name does not exist within the spreadsheet, or if an error occurs during
+     *                   the API access or data retrieval process. This ensures that calling methods are
+     *                   aware of and can handle potential failures gracefully.
+     */
     String getSheetIdByName(String sheetName) throws Exception;
 
 
-    // Optional or future implementations:
+    // Optional or future implementations (it time allows):
     // void createNewSheet(String sheetName) throws Exception;
     // void deleteSheet(String sheetName) throws Exception;
 }
