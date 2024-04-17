@@ -480,7 +480,14 @@ public class Main {
     }
 
 
-    /***/
+    /**
+     * Handles the interaction between Main and ExcelExporter. The goal is to push all the pending changes,
+     * and retrieve the latest data from the Google Sheets Database (and store it in dataRow). Finally,
+     * send the dataRow data to be processed and converted to XLSX format.
+     *
+     * @throws Exception if any user operation fails, which could be due to issues with user input, problems
+     *                   fetching or updating data in the Google Sheet, or internal application errors.
+     */
     private static void convertSheetToXLSX() throws Exception{
         // Push the pending changes
         pushChanges();
