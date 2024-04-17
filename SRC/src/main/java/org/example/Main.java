@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.services.GoogleSheetsService;
+import org.example.util.ExcelExporter;
+
 import java.util.*;
 
 public class Main {
@@ -478,6 +480,51 @@ public class Main {
     }
 
 
+    /***/
+    private static void convertSheetToXLSX() throws Exception{
+        // Push the pending changes
+        pushChanges();
+
+        // Select sheet to download
+        getAndVerifySheets();
+
+        // Ask ExcelExporter to convert dataRow to XLSX
+        ExcelExporter.convertToXLSX(dataRow);
+    }
+
+
+    /**
+     * Handles the user interactions for navigation through the utility menu. This menu interacts with ExcelExporter
+     * to handle Excel related activities. Once the user has chosen an option, they'll be redirected to their respective method.
+     *
+     * @throws Exception if any user operation fails, which could be due to issues with user input, problems
+     *                   fetching or updating data in the Google Sheet, or internal application errors.
+     * */
+    private static void utilityClassMenu() throws Exception{
+        int choice;
+        do{
+            System.out.println("\nUtility Menu");
+            System.out.println("1: Convert sheet to XLSX");
+            System.out.println("0: Return to Main Menu");
+            System.out.print("Enter your choice: ");
+            choice = Integer.parseInt(input.nextLine());
+
+            switch (choice){
+                case 1: // ConvertToXLSX
+                    convertSheetToXLSX();
+                    break;
+
+                case 0: // Return to main menu
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please try again!");
+            }
+        }
+        while (choice != 0 || choice != 1);
+    }
+
+
     /**
      * Displays the main menu and handles user interactions for navigating through the application's features.
      * Users can choose to display crops, manage crop data (add, update, delete), or push changes to the Google Sheet.
@@ -494,6 +541,7 @@ public class Main {
             System.out.println("1: Display Crops");
             System.out.println("2: Manage Crop Data");
             System.out.println("3: Push Changes to Google Sheet");
+            System.out.println("4: Utility Methods");
             System.out.println("0: Exit");
             System.out.print("Enter your choice: ");
             choice = Integer.parseInt(input.nextLine()); // Using nextLine() to avoid Scanner issues.
@@ -508,6 +556,9 @@ public class Main {
                 case 3:
                     pushChanges();
                     System.out.println("All changes pushed to the sheet.");
+                    break;
+                case 4:
+                    utilityClassMenu();
                     break;
                 case 0:
                     System.out.println("Exiting application...");

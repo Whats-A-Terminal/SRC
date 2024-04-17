@@ -17,6 +17,8 @@ dependencies {
     implementation("com.google.api-client:google-api-client:1.32.1")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.2.0")
     implementation("com.google.apis:google-api-services-sheets:v4-rev20200424-1.30.9")
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
 }
 
 tasks.test {
