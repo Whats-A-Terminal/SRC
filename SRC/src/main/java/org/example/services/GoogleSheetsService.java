@@ -128,7 +128,7 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         String sheetID = sheetInfo.getOrDefault(sheetName, "Unknown Sheet ID");
 
         List<Crop> crops = new ArrayList<>();
-        String range = sheetName + "!B3:H"; // TODO: HAVE DIFFERENT METHODS AND CONSTANT VARIABLES SO THAT THE USER CAN CHANGE WHERE A ROW STARTS AND ENDS!!!
+        String range = sheetName + "!B4:H"; // TODO: HAVE DIFFERENT METHODS AND CONSTANT VARIABLES SO THAT THE USER CAN CHANGE WHERE A ROW STARTS AND ENDS!!!
         ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
         List<List<Object>> values = response.getValues();
 
@@ -140,10 +140,11 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
         for (int i = 0; i < values.size(); i++) {
             List<Object> row = values.get(i);
             try {
-                // Parse row data into Crop object fields; adjust indices as needed
+                int cropID = getIntValue(row, 2);
+                if (cropID == -1) continue; // Skip rows where Crop ID is -1
+
                 String farmName = getStringValue(row, 0);
                 String farmLocation = getStringValue(row, 1);
-                int cropID = getIntValue(row, 2);
                 String cropName = getStringValue(row, 3);
                 int quantityAvailable = getIntValue(row, 4);
                 String harvestDate = getStringValue(row, 5);
@@ -152,9 +153,12 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
                 // Include sheetName and sheetID in the Crop constructor
                 Crop crop = new Crop(farmName, farmLocation, cropID, cropName, quantityAvailable, harvestDate, inSeason, sheetName, sheetID);
                 crops.add(crop);
+            } catch (NumberFormatException nfe) {
+                System.err.println("Invalid numeric value in row " + (i + 3) + ": " + nfe.getMessage());
+                // Handle the case where numeric conversion fails
             } catch (Exception e) {
-                System.err.println("Error parsing row " + (i + 2) + ": " + e.getMessage());
-                // Handle or log error
+                System.err.println("Error parsing row " + (i + 3) + ": " + e.getMessage());
+                // Handle or log other errors
             }
         }
 
@@ -186,16 +190,11 @@ public class GoogleSheetsService implements GoogleSheetsApplicationInterface {
      * @throws IllegalArgumentException If the numeric value at the specified index is missing, null, or not a valid integer.
      */
     private int getIntValue(List<Object> row, int index) {
-        if (row.size() <= index || row.get(index) == null || row.get(index).toString().isEmpty()) {
-            throw new IllegalArgumentException("Numeric value missing or invalid.");
-        }
+        // Handle numeric conversions safely
         try {
             return Integer.parseInt(row.get(index).toString());
         } catch (NumberFormatException e) {
-            // Log a warning message instead of throwing an exception
-            System.err.println("Warning: Invalid numeric value for Crop ID: " + row.get(index).toString());
-            // Return a default value or handle it according to your application's requirements
-            return -1; // or any other default value
+            throw new NumberFormatException("Expected an integer at index " + index + ", but found: " + row.get(index));
         }
     }
 
